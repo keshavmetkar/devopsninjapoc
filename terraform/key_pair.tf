@@ -1,0 +1,5 @@
+resource "aws_key_pair" "pem" {
+  key_name   = "devopsninja"
+   public_key = "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQCm643KRBOpP3tefp5+uS6tUXkD1p/7uXON14qeI4ypFGfmww+dqbKJ8m9Vua01Sk3QNkkDspImOeePLQfWV+Vbpyb1vQ3WRIsy3dPcguEOYWPqcoXY0k+x8LMtIFE37fUfKigfwGCKkoSM94scL5+9p8SLI+PAXID4SgPJ9kcW8JIqopaf9iH5nWYxb74pdszLmiF0U1qeFk8kuKaEcD1dtfjFNq3FQHsDyaNyruN0PMAozHSE/xEUDYvf/sKKJrsH8R7C/1Yndjk7xubDYaJ2uCWQA57X0avPAMeA17GQ6/Yr4eV9mTs7Qe0oXjR6o9mu16j/Cpk+smWe32zkpJujYitEZ5Bco2/NowtxVgzPW9MW9i02jzhB7eOmp4fahd8jo3nYGFPUxHGEU3S4hbcGMidJuh1su3dzlB4hUvBWd7tuiNv2VOM4WaRrHfWHwI1kCvtB6+8TPOsDVPoSfY6+5d62BzraJxZIPS1/RD9GaHhDrOn6Y9yHKXU660S3pys= root@ip-172-31-23-251"
+}
+

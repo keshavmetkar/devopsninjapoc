@@ -1,0 +1,24 @@
+---
+- name: Install JRE and JQ
+  hosts: app,jenkins
+  environment:
+    ANSIBLE_HOST_KEY_CHECKING: False
+  become: true
+  tasks:
+    - name: Install JRE
+      apt:
+        name: openjdk-8-jre-headless
+        state: present
+      become: true
+
+    - name: Install JQ
+      apt:
+        name: jq
+        state: present
+      become: true
+
+    - name: Install AWS CLI
+      apt:
+        name: awscli
+        state: present
+      become: true
