@@ -1,0 +1,56 @@
+pipeline {
+    agent any
+        stages {
+            stage('Checkout') {
+            agent { label 'APP' }
+                steps {
+                    checkout([
+                        $class: 'GitSCM',
+                        branches: [[name: 'main']], // <-- specify the desired branch name here
+                        userRemoteConfigs: [[
+                            url: 'git@github.com:keshavmetkar/devopsninja.git', // <-- add the SSH URL here
+                            credentialsId: 'git' // <-- add the SSH credential ID here
+                        ]]
+                    ])
+                }
+            }
+
+            stage('Build and Publish') {
+                agent { label 'APP' }
+                environment {
+                    ECR_REGISTRY = '724409163191.dkr.ecr.us-east-1.amazonaws.com'
+                    ECR_REPOSITORY = 'project_200'
+                }
+
+                steps {
+                    sh 'aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin 724409163191.dkr.ecr.us-east-1.amazonaws.com'
+                    sh "docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:${BUILD_NUMBER}  ."
+                    sh "docker push $ECR_REGISTRY/$ECR_REPOSITORY:${BUILD_NUMBER}"
+                 }
+            }
+            
+  
+            stage('Deploy App') {
+                agent { label 'APP' }
+                environment {
+                    ECR_REGISTRY = '724409163191.dkr.ecr.us-east-1.amazonaws.com'
+                    ECR_REPOSITORY = 'project_200'
+                    }
+
+                steps {
+                    script {
+                      try {
+                        def existing_container = sh(returnStdout: true, script: "docker ps -aqf 'name=$ECR_REGISTRY/$ECR_REPOSITORY:${BUILD_NUMBER}'")
+                        if (existing_container) {
+                          sh "docker stop ${existing_container.trim()}"
+                        }
+                      } catch (e) {
+                        echo "Error: $e.message"
+                      }
+                    }
+
+                    sh "docker run -d -p 8080:8080 $ECR_REGISTRY/$ECR_REPOSITORY:${BUILD_NUMBER}"
+                    }
+            }
+        }
+}
